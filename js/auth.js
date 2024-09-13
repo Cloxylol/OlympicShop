@@ -1,47 +1,50 @@
-class AuthManager {
-    constructor() {
-        this.authLink = document.getElementById('auth-link');
-    }
+document.addEventListener('DOMContentLoaded', function() {
+    const loginTab = document.getElementById('login-tab');
+    const registerTab = document.getElementById('register-tab');
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
 
-    // Fonction pour lire un cookie par son nom
-    getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(';').shift();
-        return null; // Si le cookie n'existe pas
-    }
+    loginTab.addEventListener('click', function(e) {
+        e.preventDefault();
+        loginTab.classList.add('active');
+        registerTab.classList.remove('active');
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+    });
 
-    // Fonction pour vérifier si l'utilisateur est connecté
-    isUserLoggedIn() {
-        const userName = this.getCookie('userName'); // Suppose que 'userName' est stocké dans un cookie
-        return userName !== null;
-    }
+    registerTab.addEventListener('click', function(e) {
+        e.preventDefault();
+        registerTab.classList.add('active');
+        loginTab.classList.remove('active');
+        registerForm.style.display = 'block';
+        loginForm.style.display = 'none';
+    });
 
-    // Fonction pour récupérer le nom de l'utilisateur s'il est connecté
-    getUserName() {
-        return this.getCookie('userName'); // Retourne le nom de l'utilisateur à partir du cookie
-    }
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+        // Ici, vous feriez un appel à votre API pour authentifier l'utilisateur
+        console.log('Tentative de connexion avec:', email, password);
+        // Exemple de redirection après connexion réussie
+        // window.location.href = 'index.html';
+    });
 
-    // Fonction pour mettre à jour le lien Connexion/Inscription ou Profil
-    updateAuthLink() {
-        if (this.isUserLoggedIn()) {
-            const userName = this.getUserName();
-            this.authLink.href = "./profil.html"; // Lien vers la page Profil
-            this.authLink.textContent = `Profil (${userName})`; // Afficher le nom de l'utilisateur
-        } else {
-            this.authLink.href = "./login.html"; // Lien vers la page Connexion/Inscription
-            this.authLink.textContent = "Connexion/Inscription";
+    registerForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('register-name').value;
+        const email = document.getElementById('register-email').value;
+        const password = document.getElementById('register-password').value;
+        const confirmPassword = document.getElementById('register-confirm-password').value;
+
+        if (password !== confirmPassword) {
+            alert("Les mots de passe ne correspondent pas.");
+            return;
         }
-    }
 
-    // Fonction pour initialiser et mettre à jour l'interface utilisateur
-    init() {
-        document.addEventListener('DOMContentLoaded', () => {
-            this.updateAuthLink(); // Mettre à jour le lien lors du chargement de la page
-        });
-    }
-}
-
-// Créer une instance de la classe AuthManager et initialiser
-const authManager = new AuthManager();
-authManager.init();
+        // Ici, vous feriez un appel à votre API pour enregistrer l'utilisateur
+        console.log('Tentative d\'inscription avec:', name, email, password);
+        // Exemple de redirection après inscription réussie
+        // window.location.href = 'index.html';
+    });
+});

@@ -1,6 +1,16 @@
 body {
     font-family: 'Arial', sans-serif;
-    background-color: pink;
+    background: linear-gradient(45deg, 
+        #FFB3A7,  /* pastel rouge */
+        #FFCBA4,  /* pastel orange */
+        #FFF2B2,  /* pastel jaune */
+        #FFFFFF,  /* blanc */
+        #E3A9C0,  /* pastel rose */
+        #C774A8,  /* pastel magenta */
+        #A95D7B   /* pastel violet */
+    );
+    display: flex;
+    flex-direction: column;
 }
 
 header {
@@ -33,4 +43,21 @@ footer {
 .display-4{
     text-decoration: none;
     color: white;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+.footer {
+    flex-shrink: 0;
 }
