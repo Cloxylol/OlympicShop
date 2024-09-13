@@ -1,10 +1,12 @@
 body {
     font-family: 'Arial', sans-serif;
+    background-color: pink;
 }
 
 header {
     background-color: #343a40;
     color: white;
+   
 }
 
 .card img {
@@ -14,4 +16,21 @@ header {
 
 footer {
     background-color: #343a40;
+}
+
+.auth-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 20px;
+}
+
+.display-4{
+    text-decoration: none;
+    color: white;
 }

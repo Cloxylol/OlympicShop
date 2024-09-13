@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panneau d'admin - Gestion des offres</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="bg-dark text-white py-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <div>
+                <a href="./index.html" class="display-4">Olympic Shop</a>
+                <p class="lead">Achetez vos billets pour les meilleurs événements des Jeux de Paris 2024</p>
+            </div>
+            <div class="d-flex align-items-center">
+                
+                
+                <!-- Lien vers le panier -->
+                <a href="#" class="text-white me-4">
+                    <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
+                    <span class="visually-hidden">Panier</span>
+                </a>
+                
+         
+    
+                <!-- Connexion/Inscription ou Profil -->
+               <a id="auth-link" href="#" class="text-white">Connexion/Inscription</a>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- Section gestion des offres -->
+    <div class="container my-5">
+        <div class="row">
+            <div class="col-lg-6 mb-5">
+                
+                <h2>Ajouter une nouvelle offre</h2>
+                <form id="add-offer-form">
+                    <div class="mb-3">
+                        <label for="eventTitle" class="form-label">Titre de l'événement</label>
+                        <input type="text" class="form-control" id="eventTitle" placeholder="Nom de l'événement" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventDate" class="form-label">Date de l'événement</label>
+                        <input type="date" class="form-control" id="eventDate" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="eventPrice" class="form-label">Prix du billet</label>
+                        <input type="number" class="form-control" id="eventPrice" placeholder="Prix en €" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Ajouter l'offre</button>
+                </form>
+            </div>
+
+            <div class="col-lg-6">
+                <h2>Offres existantes</h2>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Événement</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Prix</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="offers-list">
+                        <!-- Les offres seront injectées ici -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4">
+        <div class="container">
+            <p>&copy; 2024 Billetterie JO - Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
