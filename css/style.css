@@ -61,3 +61,19 @@ main {
 .footer {
     flex-shrink: 0;
 }
+
+.footer img {
+    max-height: 60px; 
+    width: auto;
+}
+
+@media (max-width: 576px) {
+    .footer .d-flex {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer img {
+        margin-bottom: 0.5rem;
+    }
+
+}
