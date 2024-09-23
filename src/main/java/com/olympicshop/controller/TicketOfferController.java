@@ -1,6 +1,7 @@
 package com.olympicshop.controller;
 
 import com.olympicshop.model.Offer;
+import com.olympicshop.model.OfferType;
 import com.olympicshop.service.OfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,11 @@ public class TicketOfferController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @GetMapping("/type/{offerType}")
+    public ResponseEntity<List<Offer>> getOffersByType(@PathVariable OfferType offerType) {
+        List<Offer> offers = offerService.getOffersByType(offerType);
+        return ResponseEntity.ok(offers);
+    }
     @PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Offer> createOffer(@RequestBody Offer offer) {
@@ -38,9 +43,18 @@ public class TicketOfferController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Offer> updateOffer(@PathVariable Long id, @RequestBody Offer offer) {
-        return ResponseEntity.ok(offerService.updateOffer(id, offer));
+        try {
+            Offer updatedOffer = offerService.updateOffer(id, offer);
+            if (updatedOffer != null) {
+                return ResponseEntity.ok(updatedOffer);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @DeleteMapping("/{id}")

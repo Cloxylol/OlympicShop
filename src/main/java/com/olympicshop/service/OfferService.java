@@ -28,9 +28,15 @@ public class OfferService {
 
     @Transactional
     public Offer updateOffer(Long id, Offer offerDetails) {
-        Offer offer = getOfferById(id);
-        offer.setOfferType(offerDetails.getOfferType());
+        Offer offer = offerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Offer not found for id: " + id));
+
+        offer.setName(offerDetails.getName());
         offer.setPrice(offerDetails.getPrice());
+        offer.setCapacity(offerDetails.getCapacity());
+        offer.setDescription(offerDetails.getDescription());
+        offer.setOfferType(offerDetails.getOfferType());
+
         return offerRepository.save(offer);
     }
 

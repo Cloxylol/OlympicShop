@@ -88,7 +88,7 @@ function editOffer(id) {
         document.getElementById('editOfferCapacity').value = offer.capacity;
         document.getElementById('editOfferDescription').value = offer.description;
         document.getElementById('editOfferType').value = offer.offerType;
-        
+
         const editModal = new bootstrap.Modal(document.getElementById('editOfferModal'));
         editModal.show();
     })
@@ -113,13 +113,22 @@ function saveEditOffer() {
         },
         body: JSON.stringify(offerData)
     })
-    .then(response => response.json())
-    .then(() => {
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur lors de la modification de l\'offre');
+        }
+        return response.json();
+    })
+    .then(updatedOffer => {
+        console.log('Offre mise à jour avec succès:', updatedOffer);
         const editModal = bootstrap.Modal.getInstance(document.getElementById('editOfferModal'));
         editModal.hide();
         loadOffers();
     })
-    .catch(error => console.error('Erreur lors de la modification de l\'offre:', error));
+    .catch(error => {
+        console.error('Erreur lors de la modification de l\'offre:', error);
+        alert('Erreur lors de la modification de l\'offre. Veuillez réessayer.');
+    });
 }
 
 function deleteOffer(id) {

@@ -19,7 +19,7 @@
                 <p class="mb-0">Achetez vos billets pour les meilleurs événements des Jeux de Paris 2024</p>
             </div>
             <div class="d-flex align-items-center">
-                <a href="#" class="text-white me-4">
+                <a id="cartIcon" href="#" class="text-white me-4">
                     <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
                     <span class="visually-hidden">Panier</span>
                 </a>
@@ -32,7 +32,8 @@
             </div>
         </div>
     </header>
-
+    
+    <main class="flex-shrink-0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
             <a class="navbar-brand" href="index.html">Accueil</a>
@@ -42,7 +43,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Événements</a>
+                        <a class="nav-link" href="buy-tickets.html">Événements</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact.html">Contact</a>
@@ -78,7 +79,7 @@
                             <option value="">Sélectionnez le type d'offre</option>
                             <option value="SOLO">Solo</option>
                             <option value="DUO">Duo</option>
-                            <option value="FAMILLE">Famille</option>
+                            <option value="FAMILY">Famille</option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Ajouter l'offre</button>
@@ -132,7 +133,7 @@
                                 <option value="">Sélectionnez le type d'offre</option>
                                 <option value="SOLO">Solo</option>
                                 <option value="DUO">Duo</option>
-                                <option value="FAMILLE">Famille</option>
+                                <option value="FAMILY">Famille</option>
                             </select>
                         </div>
                     </form>
@@ -145,7 +146,43 @@
         </div>
     </div>
 
-
+    <div class="container my-5">
+        <h2>Statistiques des réservations</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <h3>Réservations par type d'offre</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Type d'offre</th>
+                            <th>Nombre de réservations</th>
+                        </tr>
+                    </thead>
+                    <tbody id="reservationsStats">
+                        <tr>
+                            <td>Solo</td>
+                            <td id="soloCount">0</td>
+                        </tr>
+                        <tr>
+                            <td>Duo</td>
+                            <td id="duoCount">0</td>
+                        </tr>
+                        <tr>
+                            <td>Famille</td>
+                            <td id="familyCount">0</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+    
+            <div class="col-lg-6">
+                <h3>Pourcentage des réservations</h3>
+                <canvas id="reservationsChart"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    </main>
 
     <footer class="footer mt-auto py-3 bg-dark text-white">
         <div class="container">
@@ -155,10 +192,9 @@
             </div>
         </div>
     </footer>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="js/admin.js"></script>
-    <script type="module" src="js/auth.js"></script>.
+    <script type="module" src="js/auth.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             updateAuthUI(); //

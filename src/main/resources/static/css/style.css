@@ -11,6 +11,7 @@ body {
     );
     display: flex;
     flex-direction: column;
+    height: 100%;
 }
 
 header {
@@ -72,6 +73,7 @@ main {
 .footer {
     background-color: #343a40;
     flex-shrink: 0;
+    margin-top: auto;
 }
 
 .footer img {
@@ -87,5 +89,7 @@ main {
     .footer img {
         margin-bottom: 0.5rem;
     }
+
+
 
 }
