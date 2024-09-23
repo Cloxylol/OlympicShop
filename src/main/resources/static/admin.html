@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <script type="module" src="js/auth.js"></script>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -22,7 +23,12 @@
                     <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
                     <span class="visually-hidden">Panier</span>
                 </a>
-                <a id="auth-link" href="#" class="text-white">Connexion/Inscription</a>
+                <div id="auth-section">
+                    <a id="auth-link" href="auth.html" class="text-white">Connexion/Inscription</a>
+                </div>
+                <div id="user-section">
+                    <a id="user-link" href="#" class="text-white"></a>
+                </div>
             </div>
         </div>
     </header>
@@ -41,29 +47,39 @@
                     <li class="nav-item">
                         <a class="nav-link" href="contact.html">Contact</a>
                     </li>
+                    <li class="nav-item" id="admin-panel" style="display: none;">
+                        <a class="nav-link" href="admin.html">Panel d'administration</a>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
+
     
-    <!-- Section gestion des offres -->
     <div class="container my-5">
         <div class="row">
             <div class="col-lg-6 mb-5">
-                
                 <h2>Ajouter une nouvelle offre</h2>
-                <form id="add-offer-form">
+                <form id="addOfferForm">
                     <div class="mb-3">
-                        <label for="eventTitle" class="form-label">Titre de l'événement</label>
-                        <input type="text" class="form-control" id="eventTitle" placeholder="Nom de l'événement" required>
+                        <input type="text" class="form-control" id="offerName" placeholder="Nom de l'offre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="eventDate" class="form-label">Date de l'événement</label>
-                        <input type="date" class="form-control" id="eventDate" required>
+                        <input type="number" class="form-control" id="offerPrice" placeholder="Prix du billet" required>
                     </div>
                     <div class="mb-3">
-                        <label for="eventPrice" class="form-label">Prix du billet</label>
-                        <input type="number" class="form-control" id="eventPrice" placeholder="Prix en €" required>
+                        <input type="number" class="form-control" id="offerCapacity" placeholder="Capacité" required>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" id="offerDescription" placeholder="Description" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <select class="form-control" id="offerType" required>
+                            <option value="">Sélectionnez le type d'offre</option>
+                            <option value="SOLO">Solo</option>
+                            <option value="DUO">Duo</option>
+                            <option value="FAMILLE">Famille</option>
+                        </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Ajouter l'offre</button>
                 </form>
@@ -71,23 +87,65 @@
 
             <div class="col-lg-6">
                 <h2>Offres existantes</h2>
-                <table class="table table-hover">
+                <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Événement</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Prix</th>
-                            <th scope="col">Actions</th>
+                            <th>#</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                            <th>Capacité</th>
+                            <th>Type</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody id="offers-list">
-                        <!-- Les offres seront injectées ici -->
+                    <tbody id="offersList">
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOfferModalLabel">Modifier l'offre</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editOfferForm">
+                        <input type="hidden" id="editOfferId">
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="editOfferName" placeholder="Nom de l'offre" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="number" class="form-control" id="editOfferPrice" placeholder="Prix du billet" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="number" class="form-control" id="editOfferCapacity" placeholder="Capacité" required>
+                        </div>
+                        <div class="mb-3">
+                            <textarea class="form-control" id="editOfferDescription" placeholder="Description" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <select class="form-control" id="editOfferType" required>
+                                <option value="">Sélectionnez le type d'offre</option>
+                                <option value="SOLO">Solo</option>
+                                <option value="DUO">Duo</option>
+                                <option value="FAMILLE">Famille</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" id="saveEditOffer">Enregistrer les modifications</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <footer class="footer mt-auto py-3 bg-dark text-white">
         <div class="container">
@@ -98,8 +156,13 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="admin.js"></script>
+    <script type="module" src="js/admin.js"></script>
+    <script type="module" src="js/auth.js"></script>.
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            updateAuthUI(); //
+        });
+    </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded',  updateAuthUI(), function() {
     const contactForm = document.getElementById('contact-form');
     
     contactForm.addEventListener('submit', function(e) {

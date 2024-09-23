@@ -14,14 +14,25 @@ body {
 }
 
 header {
-    background-color: #343a40;
+    background-color: #303d4b;
     color: white;
-   
 }
 
 .card img {
-    height: 200px;
+    max-height: 250px;
     object-fit: cover;
+}
+
+.card-img-top {
+    height: 100%;
+    object-fit: contain;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
 }
 
 footer {
@@ -59,6 +70,7 @@ main {
 }
 
 .footer {
+    background-color: #343a40;
     flex-shrink: 0;
 }
 
