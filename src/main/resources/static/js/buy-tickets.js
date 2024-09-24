@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+    
     if(window.location.hash) {
         const tab = document.querySelector(`button[data-bs-target="${window.location.hash}"]`);
         if(tab) {
