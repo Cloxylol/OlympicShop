@@ -1,9 +1,8 @@
 package com.olympicshop.service;
 
-import com.olympicshop.model.Booking;
-import com.olympicshop.model.User;
-import com.olympicshop.model.Offer;
+import com.olympicshop.model.*;
 import com.olympicshop.repository.BookingRepository;
+import com.olympicshop.repository.CartRepository;
 import com.olympicshop.repository.UserRepository;
 import com.olympicshop.repository.OfferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,22 +26,8 @@ public class BookingService {
     @Autowired
     private OfferRepository offerRepository;
 
-    @Transactional
-    public Booking createBooking(Booking booking) {
-        User user = userRepository.findById(booking.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Offer offer = offerRepository.findById(booking.getTicketOffer().getId())
-                .orElseThrow(() -> new RuntimeException("Offer not found"));
-
-        booking.setUser(user);
-        booking.setTicketOffer(offer);
-        booking.setBookingDate(LocalDateTime.now());
-        booking.setBookingCode(generateBookingCode());
-
-        // TODO GENERER LE QR CODE ?
-
-        return bookingRepository.save(booking);
-    }
+    @Autowired
+    private CartRepository cartRepository;
 
     public Booking getBookingById(Long id) {
         return bookingRepository.findById(id)
@@ -78,4 +64,32 @@ public class BookingService {
     private String generateBookingCode() {
         return UUID.randomUUID().toString();
     }
+
+    @Transactional
+    public List<Booking> createMultipleBookings(Long userId) {
+        List<Booking> bookings = new ArrayList<>();
+
+
+        User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("User do not have Cart"));;
+
+            for (CartItem item : cart.getItems()) {
+
+                Booking booking = new Booking();
+                booking.setUser(user);
+                booking.setTicketOffer(item.getOffer());
+                booking.setBookingDate(LocalDateTime.now());
+                booking.setBookingCode(generateBookingCode());
+                booking.setNumberOfTickets(item.getQuantity());
+
+                // TODO: Générer le QR code ici
+
+                bookings.add(bookingRepository.save(booking));
+            }
+
+        return bookings;
+    }
+
 }

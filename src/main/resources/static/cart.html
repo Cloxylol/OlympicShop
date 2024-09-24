@@ -58,15 +58,53 @@
         </div>
     </nav>
 
-
-    <main class="container my-5">
+    <div class="container my-5" role="main">
         <h1>Votre Panier</h1>
         <div id="cartContainer">
-            <!-- Le contenu du panier sera inséré ici dynamiquement -->
+            <div id="cartItems"></div>
+            <div id="cartTotal"></div>
         </div>
-        <button id="checkoutBtn" class="btn btn-primary mt-3">Passer à la caisse</button>
-    </main>
+    </div>
+    
 
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="paymentModalLabel">Paiement</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="paymentForm">
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">Numéro de carte</label>
+                            <input type="text" class="form-control" id="cardNumber" placeholder="1234 5678 9012 3456"
+                                required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="expiryDate" class="form-label">Date d'expiration</label>
+                                <input type="text" class="form-control" id="expiryDate" placeholder="MM/AA" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cvv" class="form-label">CVV</label>
+                                <input type="text" class="form-control" id="cvv" placeholder="123" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cardHolder" class="form-label">Nom du titulaire</label>
+                            <input type="text" class="form-control" id="cardHolder" placeholder="John Doe" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary" id="confirmPayment"
+                        onclick="processMockPayment()">Confirmer le paiement</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer class="footer mt-auto py-3 bg-dark text-white">
         <div class="container">

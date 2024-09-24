@@ -19,9 +19,10 @@ public class BookingController {
         this.bookingService = bookingService;
     }
 
-    @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        return ResponseEntity.ok(bookingService.createBooking(booking));
+    @PostMapping("/create-multiple")
+    public ResponseEntity<List<Booking>> createMultipleBookings(@RequestBody Long userId) {
+        List<Booking> bookings = bookingService.createMultipleBookings(userId);
+        return ResponseEntity.ok(bookings);
     }
 
     @GetMapping("/{id}")
