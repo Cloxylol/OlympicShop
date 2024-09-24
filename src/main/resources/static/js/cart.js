@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     // Charger le contenu du panier au chargement de la page
     getCart();
-    
+
     document.querySelectorAll('.add-to-cart-btn').forEach(button => {
         button.addEventListener('click', function () {
             const offerId = this.getAttribute('data-offer-id');
@@ -10,15 +10,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+function isAuthenticated() {
+    return localStorage.getItem('token') !== null;
+}
+
 function getUserInfo() {
+    if (!isAuthenticated()) {
+        return null;
+    }
     const userString = localStorage.getItem('user');
     if (!userString) {
         console.error('Aucune information utilisateur trouvée.');
         return null;
     }
-    const user = JSON.parse(userString);
-    console.log('User info from localStorage:', user); // Pour déboguer
-    return user;
+    return JSON.parse(userString);
 }
 
 function addToCart(offerId, quantity = 1) {
@@ -45,7 +50,6 @@ function addToCart(offerId, quantity = 1) {
         })
         .then(updatedCart => {
             console.log('Article ajouté au panier:', updatedCart);
-            updateCartDisplay();
             alert('Article ajouté au panier avec succès !');
         })
         .catch(error => {
@@ -76,7 +80,6 @@ function removeFromCart(offerId) {
         })
         .then(updatedCart => {
             console.log('Article retiré du panier:', updatedCart);
-            updateCartDisplay(updatedCart);
             alert('Article retiré du panier avec succès !');
         })
         .catch(error => {
@@ -107,7 +110,6 @@ function updateQuantity(offerId, quantity) {
         })
         .then(updatedCart => {
             console.log('Quantité mise à jour:', updatedCart);
-            updateCartDisplay(updatedCart);
             alert('Quantité mise à jour avec succès !');
         })
         .catch(error => {
@@ -173,25 +175,9 @@ function updateCartItemQuantity(offerId, newQuantity) {
         .then(updatedCart => {
             console.log('Quantité mise à jour:', updatedCart);
             displayCartContents();
-            updateCartDisplay();
         })
         .catch(error => {
             console.error('Erreur:', error);
             alert('Erreur lors de la mise à jour de la quantité. Veuillez réessayer.');
-        });
-}
-
-function updateCartDisplay() {
-    const cartBadge = document.querySelector('#cartIcon');
-    if (!cartBadge) return;
-
-    getCart()
-        .then(cart => {
-            const itemCount = cart.items.reduce((total, item) => total + item.quantity, 0);
-            cartBadge.textContent = itemCount.toString();
-        })
-        .catch(error => {
-            console.error('Erreur lors de la mise à jour de l\'affichage du panier:', error);
-            cartBadge.textContent = '?';
         });
 }

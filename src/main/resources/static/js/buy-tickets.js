@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', function() {
+    if(window.location.hash) {
+        const tab = document.querySelector(`button[data-bs-target="${window.location.hash}"]`);
+        if(tab) {
+            new bootstrap.Tab(tab).show();
+        }
+    }
     loadOffers();
 });
+
+
+
+
 
 function loadOffers() {
     Promise.all([
