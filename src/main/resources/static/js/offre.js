@@ -10,27 +10,25 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadOffreDetails(offreId) {
-    // Dans un cas réel, vous feriez un appel API ici pour obtenir les détails de l'offre
-    // Pour cet exemple, nous utiliserons des données statiques
     const offres = {
         'solo': {
             title: 'Offre solo',
             description: 'Billet pour une personne',
-            image: 'img/solo.jpg',
+            image: 'img/solo.png',
             price: '50€',
             details: 'Accès à un événement olympique au choix parmi une sélection.'
         },
         'duo': {
             title: 'Offre duo',
             description: 'Billet pour deux personnes',
-            image: 'img/duo.jpg',
+            image: 'img/duo.png',
             price: '90€',
             details: 'Accès pour deux personnes à un événement olympique au choix parmi une sélection.'
         },
         'famille': {
             title: 'Offre famille',
             description: 'Billet pour deux adultes et deux enfants',
-            image: 'img/famille.jpg',
+            image: 'img/famille.PNG',
             price: '160€',
             details: 'Accès pour deux adultes et deux enfants à un événement olympique au choix parmi une sélection familiale.'
         }
