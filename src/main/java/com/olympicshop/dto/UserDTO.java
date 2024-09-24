@@ -14,6 +14,9 @@ public class UserDTO {
     private String lastName;
     private Set<String> roles;
 
+    public UserDTO(Long id, String firstName, String username, Set<Role> roles) {
+    }
+
     public Long getId() {
         return id;
     }
@@ -52,6 +55,14 @@ public class UserDTO {
 
     public void setRoles(Set<String> roles) {
         this.roles = roles;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                '}';
     }
 
     public UserDTO(Long id) {

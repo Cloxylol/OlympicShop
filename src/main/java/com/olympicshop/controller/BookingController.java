@@ -2,7 +2,6 @@ package com.olympicshop.controller;
 
 import com.olympicshop.model.Booking;
 import com.olympicshop.service.BookingService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("/api/bookings")
 public class BookingController {
 
-    @Autowired
-    private BookingService bookingService;
+    private final BookingService bookingService;
+
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
+    }
 
     @PostMapping
     public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {

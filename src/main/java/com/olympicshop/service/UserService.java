@@ -1,10 +1,8 @@
 package com.olympicshop.service;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.olympicshop.security.JwtUtils;
 import com.olympicshop.model.User;
 import com.olympicshop.repository.UserRepository;
-import com.olympicshop.security.UserDetailsImpl;
 import com.olympicshop.util.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -18,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
@@ -31,22 +28,15 @@ public class UserService implements UserDetailsService {
 
     private static final int KEY_LENGTH_BYTES = 32;
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    @Lazy
-    private AuthenticationManager authenticationManager;
-
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-
-    @Autowired
-    public UserService(JwtUtils jwtUtils) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, @Lazy AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
     }
 
@@ -65,7 +55,7 @@ public class UserService implements UserDetailsService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        return UserDetailsImpl.build(user);
+        return user;
     }
 
     @Transactional

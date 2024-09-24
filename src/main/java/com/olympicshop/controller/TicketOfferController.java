@@ -3,7 +3,6 @@ package com.olympicshop.controller;
 import com.olympicshop.model.Offer;
 import com.olympicshop.model.OfferType;
 import com.olympicshop.service.OfferService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,8 +13,11 @@ import java.util.List;
 @RequestMapping("/api/ticket-offers")
 public class TicketOfferController {
 
-    @Autowired
-    private OfferService offerService;
+    private final OfferService offerService;
+
+    public TicketOfferController(OfferService offerService) {
+        this.offerService = offerService;
+    }
 
     @GetMapping
     public List<Offer> getAllOffers() {

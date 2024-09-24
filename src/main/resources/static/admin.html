@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +12,7 @@
 </head>
 
 <body class="d-flex flex-column h-100">
-    
+
     <header class="bg-dark text-white py-4">
         <div class="container d-flex justify-content-between align-items-center">
             <div>
@@ -19,175 +20,189 @@
                 <p class="mb-0">Achetez vos billets pour les meilleurs événements des Jeux de Paris 2024</p>
             </div>
             <div class="d-flex align-items-center">
-                <a id="cartIcon" href="#" class="text-white me-4">
-                    <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
-                    <span class="visually-hidden">Panier</span>
+                <a href="cart.html" class="text-white me-4 position-relative">
+                    <i class="bi bi-cart"></i>
+                    <span id="cartIcon"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                    </span>
+                </a>
                 </a>
                 <div id="auth-section">
                     <a id="auth-link" href="auth.html" class="text-white">Connexion/Inscription</a>
                 </div>
                 <div id="user-section">
-                    <a id="user-link" href="#" class="text-white"></a>
+                    <a id="auth-link" href="#" class="text-white"></a>
                 </div>
             </div>
         </div>
     </header>
-    
+
     <main class="flex-shrink-0">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">Accueil</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="buy-tickets.html">Événements</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
-                    </li>
-                    <li class="nav-item" id="admin-panel" style="display: none;">
-                        <a class="nav-link" href="admin.html">Panel d'administration</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    
-    <div class="container my-5">
-        <div class="row">
-            <div class="col-lg-6 mb-5">
-                <h2>Ajouter une nouvelle offre</h2>
-                <form id="addOfferForm">
-                    <div class="mb-3">
-                        <input type="text" class="form-control" id="offerName" placeholder="Nom de l'offre" required>
-                    </div>
-                    <div class="mb-3">
-                        <input type="number" class="form-control" id="offerPrice" placeholder="Prix du billet" required>
-                    </div>
-                    <div class="mb-3">
-                        <input type="number" class="form-control" id="offerCapacity" placeholder="Capacité" required>
-                    </div>
-                    <div class="mb-3">
-                        <textarea class="form-control" id="offerDescription" placeholder="Description" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <select class="form-control" id="offerType" required>
-                            <option value="">Sélectionnez le type d'offre</option>
-                            <option value="SOLO">Solo</option>
-                            <option value="DUO">Duo</option>
-                            <option value="FAMILY">Famille</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Ajouter l'offre</button>
-                </form>
-            </div>
-
-            <div class="col-lg-6">
-                <h2>Offres existantes</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Nom</th>
-                            <th>Prix</th>
-                            <th>Capacité</th>
-                            <th>Type</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="offersList">
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editOfferModalLabel">Modifier l'offre</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">Accueil</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="buy-tickets.html">Événements</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">Contact</a>
+                        </li>
+                        <li class="nav-item" id="admin-panel" style="display: none;">
+                            <a class="nav-link" href="admin.html">Panel d'administration</a>
+                        </li>
+                    </ul>
                 </div>
-                <div class="modal-body">
-                    <form id="editOfferForm">
-                        <input type="hidden" id="editOfferId">
+            </div>
+        </nav>
+
+
+        <div class="container my-5">
+            <div class="row">
+                <div class="col-lg-6 mb-5">
+                    <h2>Ajouter une nouvelle offre</h2>
+                    <form id="addOfferForm">
                         <div class="mb-3">
-                            <input type="text" class="form-control" id="editOfferName" placeholder="Nom de l'offre" required>
+                            <input type="text" class="form-control" id="offerName" placeholder="Nom de l'offre"
+                                required>
                         </div>
                         <div class="mb-3">
-                            <input type="number" class="form-control" id="editOfferPrice" placeholder="Prix du billet" required>
+                            <input type="number" class="form-control" id="offerPrice" placeholder="Prix du billet"
+                                required>
                         </div>
                         <div class="mb-3">
-                            <input type="number" class="form-control" id="editOfferCapacity" placeholder="Capacité" required>
+                            <input type="number" class="form-control" id="offerCapacity" placeholder="Capacité"
+                                required>
                         </div>
                         <div class="mb-3">
-                            <textarea class="form-control" id="editOfferDescription" placeholder="Description" required></textarea>
+                            <textarea class="form-control" id="offerDescription" placeholder="Description"
+                                required></textarea>
                         </div>
                         <div class="mb-3">
-                            <select class="form-control" id="editOfferType" required>
+                            <select class="form-control" id="offerType" required>
                                 <option value="">Sélectionnez le type d'offre</option>
                                 <option value="SOLO">Solo</option>
                                 <option value="DUO">Duo</option>
                                 <option value="FAMILY">Famille</option>
                             </select>
                         </div>
+                        <button type="submit" class="btn btn-primary">Ajouter l'offre</button>
                     </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary" id="saveEditOffer">Enregistrer les modifications</button>
+
+                <div class="col-lg-6">
+                    <h2>Offres existantes</h2>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Nom</th>
+                                <th>Prix</th>
+                                <th>Capacité</th>
+                                <th>Type</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offersList">
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
 
-    <div class="container my-5">
-        <h2>Statistiques des réservations</h2>
-        <div class="row">
-            <div class="col-lg-6">
-                <h3>Réservations par type d'offre</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Type d'offre</th>
-                            <th>Nombre de réservations</th>
-                        </tr>
-                    </thead>
-                    <tbody id="reservationsStats">
-                        <tr>
-                            <td>Solo</td>
-                            <td id="soloCount">0</td>
-                        </tr>
-                        <tr>
-                            <td>Duo</td>
-                            <td id="duoCount">0</td>
-                        </tr>
-                        <tr>
-                            <td>Famille</td>
-                            <td id="familyCount">0</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-    
-            <div class="col-lg-6">
-                <h3>Pourcentage des réservations</h3>
-                <canvas id="reservationsChart"></canvas>
+        <div class="modal fade" id="editOfferModal" tabindex="-1" aria-labelledby="editOfferModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editOfferModalLabel">Modifier l'offre</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="editOfferForm">
+                            <input type="hidden" id="editOfferId">
+                            <div class="mb-3">
+                                <input type="text" class="form-control" id="editOfferName" placeholder="Nom de l'offre"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="number" class="form-control" id="editOfferPrice"
+                                    placeholder="Prix du billet" required>
+                            </div>
+                            <div class="mb-3">
+                                <input type="number" class="form-control" id="editOfferCapacity" placeholder="Capacité"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" id="editOfferDescription" placeholder="Description"
+                                    required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <select class="form-control" id="editOfferType" required>
+                                    <option value="">Sélectionnez le type d'offre</option>
+                                    <option value="SOLO">Solo</option>
+                                    <option value="DUO">Duo</option>
+                                    <option value="FAMILY">Famille</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary" id="saveEditOffer">Enregistrer les
+                            modifications</button>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    
+
+        <div class="container my-5">
+            <h2>Statistiques des réservations</h2>
+            <div class="row">
+                <div class="col-lg-6">
+                    <h3>Réservations par type d'offre</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Type d'offre</th>
+                                <th>Nombre de réservations</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reservationsStats">
+                            <tr>
+                                <td>Solo</td>
+                                <td id="soloCount">0</td>
+                            </tr>
+                            <tr>
+                                <td>Duo</td>
+                                <td id="duoCount">0</td>
+                            </tr>
+                            <tr>
+                                <td>Famille</td>
+                                <td id="familyCount">0</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-lg-6">
+                    <h3>Pourcentage des réservations</h3>
+                    <canvas id="reservationsChart"></canvas>
+                </div>
+            </div>
+        </div>
+
     </main>
 
     <footer class="footer mt-auto py-3 bg-dark text-white">
         <div class="container">
             <div class="d-flex justify-content-center align-items-center">
-                <img src="img/logo-footer.png" alt="Logo Olympic Shop" class="me-3"> 
+                <img src="img/logo-footer.png" alt="Logo Olympic Shop" class="me-3">
                 <p class="mb-0">&copy; 2024 Billetterie Événements. Tous droits réservés.</p>
             </div>
         </div>
@@ -195,10 +210,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="module" src="js/admin.js"></script>
     <script type="module" src="js/auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            updateAuthUI(); //
-        });
-    </script>
+    <script src="js/cart.js"></script>
 </body>
+
 </html>

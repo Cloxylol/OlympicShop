@@ -17,9 +17,12 @@
                 <p class="mb-0">Achetez vos billets pour les meilleurs événements des Jeux de Paris 2024</p>
             </div>
             <div class="d-flex align-items-center">
-                <a id="cartIcon" href="#" class="text-white me-4">
-                    <i class="bi bi-cart3" style="font-size: 1.5rem;"></i>
-                    <span class="visually-hidden">Panier</span>
+                <a href="cart.html" class="text-white me-4 position-relative">
+                    <i class="bi bi-cart"></i>
+                    <span id="cartIcon"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        0
+                    </span>
                 </a>
                 <div id="auth-section">
                     <a id="auth-link" href="auth.html" class="text-white">Connexion/Inscription</a>
@@ -105,10 +108,6 @@
     <script type="module" src="js/contact.js"></script>
     <script type="module" src="js/main.js"></script>
     <script type="module" src="js/auth.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            updateAuthUI(); // 
-        });
-    </script>
+    <script src="js/cart.js"></script>
 </body>
 </html>
