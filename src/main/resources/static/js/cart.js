@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function () {
-    // Charger le contenu du panier au chargement de la page
     getCart();
 
     document.querySelectorAll('.add-to-cart-btn').forEach(button => {
