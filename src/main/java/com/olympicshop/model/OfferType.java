@@ -2,6 +2,6 @@ package com.olympicshop.model;
 
 public enum OfferType {
     SOLO,    // billets individuels
-    DUO,     // billets en couple
-    FAMILY  // billets familiaux
+    DUO,     // billet pour 2 personnes
+    FAMILY  // billets famille
 }
