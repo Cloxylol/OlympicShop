@@ -66,11 +66,10 @@ public class BookingService {
     }
 
     @Transactional
-    public List<Booking> createMultipleBookings(Long userId) {
+    public List<Booking> createMultipleBookings(String username) {
+
         List<Booking> bookings = new ArrayList<>();
-
-
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));
         Cart cart = cartRepository.findByUser(user)
                 .orElseThrow(() -> new RuntimeException("User do not have Cart"));;
