@@ -1,7 +1,9 @@
 package com.olympicshop.controller;
 
 import com.olympicshop.model.Booking;
+import com.olympicshop.security.JwtUtils;
 import com.olympicshop.service.BookingService;
+import com.olympicshop.service.SessionService;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +16,20 @@ import java.util.List;
 public class BookingController {
 
     private final BookingService bookingService;
+    private final SessionService sessionService;
+    private final JwtUtils jwtUtils;
 
-    public BookingController(BookingService bookingService) {
+    public BookingController(BookingService bookingService, SessionService sessionService, JwtUtils jwtUtils) {
         this.bookingService = bookingService;
+        this.sessionService = sessionService;
+        this.jwtUtils = jwtUtils;
     }
 
     @PostMapping("/create-multiple")
-    public ResponseEntity<List<Booking>> createMultipleBookings(@RequestBody Long userId) {
-        List<Booking> bookings = bookingService.createMultipleBookings(userId);
+    public ResponseEntity<List<Booking>> createMultipleBookings() throws Exception {
+        String token = sessionService.getToken();
+        String username = jwtUtils.extractUsername(token);
+        List<Booking> bookings = bookingService.createMultipleBookings(1L);
         return ResponseEntity.ok(bookings);
     }
 
