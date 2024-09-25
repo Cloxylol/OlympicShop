@@ -9,10 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     loadOffers();
 });
 
-
-
-
-
 function loadOffers() {
     Promise.all([
         fetchOffersByType('SOLO'),

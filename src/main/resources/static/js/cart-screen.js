@@ -85,6 +85,10 @@ function createBooking() {
     if (!userInfo) {
         return Promise.reject(new Error('Utilisateur non connecté'));
     }
+    const token = localStorage.getItem('token');
+    if (!token) {
+        return Promise.reject(new Error('Token d\'authentification non trouvé'));
+    }
 
     return getCart()
         .then(cart => {
@@ -100,6 +104,7 @@ function createBooking() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify(userInfo.id)
             });

@@ -16,7 +16,6 @@ public interface OfferRepository extends JpaRepository<Offer, Long> {
     // Trouver toutes les offres d'un type spécifique
     List<Offer> findByOfferType(OfferType offerType);
 
-
     // Trouver toutes les offres, triées par prix
     List<Offer> findAllByOrderByPriceAsc();
 
