@@ -22,7 +22,7 @@ public class Offer {
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(length = 20)
     private OfferType offerType;
 
     public Long getId() {

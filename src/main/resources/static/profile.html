@@ -57,10 +57,35 @@
     </nav>
 
 
-
-    <div class="container">Votre Profil</div>
-
-
+    <main class="container my-5">
+        <h1 class="mb-4">Votre Profil</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Informations personnelles</h2>
+                <form id="user-info" class="mt-3">
+                    <div class="mb-3">
+                        <label for="user-email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="user-email" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user-lastname" class="form-label">Nom</label>
+                        <input type="text" class="form-control" id="user-lastname" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="user-firstname" class="form-label">Prénom</label>
+                        <input type="text" class="form-control" id="user-firstname" readonly>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="edit-profile-btn">Modifier le profil</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h2>Vos billets</h2>
+                <div id="user-bookings" class="mt-3">
+                    <!--liste des réservations-->
+                </div>
+            </div>
+        </div>
+    </main>
 
     <footer class="footer mt-auto py-3 bg-dark text-white">
         <div class="container">

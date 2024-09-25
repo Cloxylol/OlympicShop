@@ -14,7 +14,6 @@ public class Role {
     private ERole name;
 
     public Role() {
-
     }
 
     public Integer getId() {

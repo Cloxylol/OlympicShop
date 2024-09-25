@@ -39,8 +39,8 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found with code: " + bookingCode));
     }
 
-    public List<Booking> getBookingsByUser(Long userId) {
-        User user = userRepository.findById(userId)
+    public List<Booking> getBookingsByUser(String username) {
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         return bookingRepository.findByUser(user);
     }

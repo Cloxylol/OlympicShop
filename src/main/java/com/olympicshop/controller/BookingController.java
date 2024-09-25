@@ -44,8 +44,10 @@ public class BookingController {
     }
 
     @GetMapping("/user/{userId}")
-    public List<Booking> getBookingsByUser(@PathVariable Long userId) {
-        return bookingService.getBookingsByUser(userId);
+    public List<Booking> getBookingsByUser(@PathVariable Long userId) throws Exception {
+        String token = sessionService.getToken();
+        String username = jwtUtils.extractUsername(token);
+        return bookingService.getBookingsByUser(username);
     }
 
     @GetMapping("/offer/{offerId}")
