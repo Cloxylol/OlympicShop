@@ -24,7 +24,7 @@ export function initAuth() {
 
 
 async function handleLogin(event) {
-    event .preventDefault();
+    event.preventDefault();
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
@@ -58,18 +58,36 @@ async function handleLogin(event) {
         });
 }
 
+function isValidPassword(password) {
+    // Au moins 8 caractères, au moins 1 chiffre et 1 lettre
+    const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=\S+$).{8,}$/;
+    return regex.test(password);
+}
+
 async function handleRegister(event) {
-    event .preventDefault();
+    event.preventDefault();
     const firstName = document.getElementById('register-firstname').value;
     const lastName = document.getElementById('register-lastname').value;
     const email = document.getElementById('register-email').value;
-    const password = document.getElementById('register-password').value;
-    const confirmPassword = document.getElementById('register-confirm-password').value;
+    const passwordInput = document.getElementById('register-password');
+    const confirmPasswordInput = document.getElementById('register-confirm-password');
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
     const registerForm = document.getElementById('register-form');
+
 
 
     if (password !== confirmPassword) {
         showAlert("Les mots de passe ne correspondent pas.", 'danger');
+        passwordInput.value = '';
+        confirmPasswordInput.value = '';
+        return;
+    }
+
+    if (!isValidPassword(password)) {
+        showAlert("Le mot de passe doit contenir au moins 8 caractères et au moins un chiffre.", 'danger');
+        passwordInput.value = '';
+        confirmPasswordInput.value = '';
         return;
     }
 
@@ -115,19 +133,19 @@ async function handleRegister(event) {
 
 
 function togglePasswordVisibility(button) {
-        const input = button.previousElementSibling;
-        const icon = button.querySelector('i');
+    const input = button.previousElementSibling;
+    const icon = button.querySelector('i');
 
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.remove('bi-eye');
-            icon.classList.add('bi-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.remove('bi-eye-slash');
-            icon.classList.add('bi-eye');
-        }
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
     }
+}
 
 
 function showAlert(message, type) {
@@ -157,59 +175,59 @@ function showAlert(message, type) {
 }
 
 
-    function updateAuthUI() {
+function updateAuthUI() {
 
-        if(loginTab && registerTab) {
-            loginTab.addEventListener('click', function(e) {
-                e.preventDefault();
-                loginTab.classList.add('active');
-                registerTab.classList.remove('active');
-                loginForm.style.display = 'block';
-                registerForm.style.display = 'none';
-            });
+    if (loginTab && registerTab) {
+        loginTab.addEventListener('click', function (e) {
+            e.preventDefault();
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            loginForm.style.display = 'block';
+            registerForm.style.display = 'none';
+        });
 
-            registerTab.addEventListener('click', function(e) {
-                e.preventDefault();
-                registerTab.classList.add('active');
-                loginTab.classList.remove('active');
-                registerForm.style.display = 'block';
-                loginForm.style.display = 'none';
-            });
-        }
+        registerTab.addEventListener('click', function (e) {
+            e.preventDefault();
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            registerForm.style.display = 'block';
+            loginForm.style.display = 'none';
+        });
+    }
 
-        const authSection = document.getElementById('auth-section');
-        const userSection = document.getElementById('user-section');
-        const adminPanel = document.getElementById('admin-panel');
+    const authSection = document.getElementById('auth-section');
+    const userSection = document.getElementById('user-section');
+    const adminPanel = document.getElementById('admin-panel');
 
-        const user = JSON.parse(localStorage.getItem('user'));
+    const user = JSON.parse(localStorage.getItem('user'));
 
-        if (isAuthenticated()) {
-            authSection.style.display = 'none';
-            userSection.style.display = 'block';
-            userSection.innerHTML = `
+    if (isAuthenticated()) {
+        authSection.style.display = 'none';
+        userSection.style.display = 'block';
+        userSection.innerHTML = `
                 <span>Bienvenue, ${user.firstName}</span>
                 <a href="profile.html" class="btn btn-primary btn-sm ms-2">Profil</a>
                 <button id="logout-button" class="btn btn-secondary btn-sm ms-2">Déconnexion</button>
             `;
 
-            const logoutButton = document.getElementById('logout-button');
-            if (logoutButton) {
-                logoutButton.addEventListener('click', handleLogout);
-            }
-
-            if (user.roles && user.roles.includes('ROLE_ADMIN')) {
-                adminPanel.style.display = 'inline-block';
-            } else {
-                adminPanel.style.display = 'none';
-            }
-
-        } else {
-            authSection.style.display = 'block';
-            userSection.style.display = 'none';
+        const logoutButton = document.getElementById('logout-button');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', handleLogout);
         }
 
+        if (user.roles && user.roles.includes('ROLE_ADMIN')) {
+            adminPanel.style.display = 'inline-block';
+        } else {
+            adminPanel.style.display = 'none';
+        }
 
+    } else {
+        authSection.style.display = 'block';
+        userSection.style.display = 'none';
     }
+
+
+}
 
 function handleLogout() {
     localStorage.removeItem('token');
@@ -219,21 +237,18 @@ function handleLogout() {
     window.location.href = 'index.html';
 }
 
-
-
 const toggleButtons = document.querySelectorAll('.toggle-password');
 toggleButtons.forEach(button => {
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
         togglePasswordVisibility(this);
     });
 });
-
 
 export function isAuthenticated() {
     return localStorage.getItem('token') !== null;
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     initAuth();
     updateAuthUI();
 });

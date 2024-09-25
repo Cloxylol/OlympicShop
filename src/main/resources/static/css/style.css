@@ -4,7 +4,7 @@ body {
         #FFB3A7,  /* pastel rouge */
         #FFCBA4,  /* pastel orange */
         #FFF2B2,  /* pastel jaune */
-        #FFFFFF,  /* blanc */
+        #f7e1f5,  /* blanc */
         #E3A9C0,  /* pastel rose */
         #C774A8,  /* pastel magenta */
         #A95D7B   /* pastel violet */
@@ -80,6 +80,38 @@ main {
 .footer img {
     max-height: 60px; 
     width: auto;
+}
+
+.btn-pink {
+    color: #fff;
+    background-color: #ff69b4;
+    border-color: #ff69b4;
+}
+.btn-pink:hover {
+    color: #fff;
+    background-color: #ff1493;
+    border-color: #ff1493;
+}
+
+.btn-purple{
+    color: #f0f0f0;
+    background-color: #8005b9;
+    border-color: #8005b9;
+}
+
+.btn-purple:hover{
+    color: #f0f0f0;
+    background-color: #470168;
+    border-color: #470168;
+}
+
+.chart-container {
+    height: 400px; /* Ajustez cette valeur selon vos besoins */
+    width: 100%;
+}
+#bookingsChart {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 @media (max-width: 576px) {
