@@ -1,6 +1,7 @@
 package com.olympicshop.controller;
 
 import com.olympicshop.model.Booking;
+import com.olympicshop.model.OfferType;
 import com.olympicshop.security.JwtUtils;
 import com.olympicshop.service.BookingService;
 import com.olympicshop.service.SessionService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/bookings")
@@ -67,4 +69,12 @@ public class BookingController {
         bookingService.deleteBooking(id);
         return ResponseEntity.ok("Booking deleted successfully");
     }
+
+    @GetMapping("/by-offer-type")
+    public ResponseEntity<Map<OfferType, List<Booking>>> getBookingsByOfferType() {
+        return ResponseEntity.ok(bookingService.getAllBookingsByOfferType());
+    }
+
+
+
 }

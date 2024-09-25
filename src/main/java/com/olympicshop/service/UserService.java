@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.nio.ByteBuffer;
 import java.security.SecureRandom;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.List;
 
@@ -63,16 +64,15 @@ public class UserService implements UserDetailsService {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("Username is already taken!");
         }
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Email is already in use!");
-        }
 
+        user.setCreationDate(LocalDateTime.now());
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         user.setSecurityKey("");
         user = userRepository.save(user); // Save pour avoir l'ident
         String securityKey = generateSecurityKey(user.getId());
         user.setSecurityKey(securityKey);
+
         return userRepository.save(user); // Save à nouveau avec la securityKey
     }
 

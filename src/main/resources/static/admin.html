@@ -164,33 +164,21 @@
             <div class="row">
                 <div class="col-lg-6">
                     <h3>Réservations par type d'offre</h3>
-                    <table class="table">
+                    <table id="bookingsByTypeTable" class="table table-striped">
                         <thead>
                             <tr>
                                 <th>Type d'offre</th>
                                 <th>Nombre de réservations</th>
                             </tr>
                         </thead>
-                        <tbody id="reservationsStats">
-                            <tr>
-                                <td>Solo</td>
-                                <td id="soloCount">0</td>
-                            </tr>
-                            <tr>
-                                <td>Duo</td>
-                                <td id="duoCount">0</td>
-                            </tr>
-                            <tr>
-                                <td>Famille</td>
-                                <td id="familyCount">0</td>
-                            </tr>
+                        <tbody>
                         </tbody>
                     </table>
                 </div>
-
                 <div class="col-lg-6">
                     <h3>Pourcentage des réservations</h3>
-                    <canvas id="reservationsChart"></canvas>
+                    <div id="percentageChart">
+                    </div>
                 </div>
             </div>
         </div>

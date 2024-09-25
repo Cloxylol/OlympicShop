@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +33,9 @@ public class User implements UserDetails  {
 
     @Column(nullable = false)
     private String securityKey;
+
+    @Column(nullable = true)
+    private LocalDateTime creationDate;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles", 
@@ -128,10 +132,18 @@ public class User implements UserDetails  {
         this.roles = roles;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
     public User() {
     }
 
-    public User(Long id, String username, String password, String email, String firstName, String lastName, String securityKey, Set<Role> roles) {
+    public User(Long id, String username, String password, String email, String firstName, String lastName, String securityKey, Set<Role> roles, LocalDateTime creationDate) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -140,5 +152,6 @@ public class User implements UserDetails  {
         this.lastName = lastName;
         this.securityKey = securityKey;
         this.roles = roles;
+        this.creationDate = creationDate;
     }
 }
