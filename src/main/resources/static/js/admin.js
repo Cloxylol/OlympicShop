@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function loadAdminContent() {
     loadOffers();
+    loadStatistics(); 
     setupEventListeners();
 }
 
@@ -142,4 +143,92 @@ function deleteOffer(id) {
         .then(() => loadOffers())
         .catch(error => console.error('Erreur lors de la suppression de l\'offre:', error));
     }
+}
+
+
+function loadStatistics() {
+    fetch('/api/bookings/by-offer-type', {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
+    .then(response => response.json())
+    .then(bookingsByType => {
+        const statistics = processBookingStatistics(bookingsByType);
+        updateBookingStatistics(statistics);
+        updateBookingsTable(statistics);
+    })
+    .catch(error => console.error('Erreur lors du chargement des statistiques:', error));
+}
+
+function processBookingStatistics(bookingsByType) {
+    let totalBookings = 0;
+    const bookingCounts = {};
+
+    for (const [offerType, bookings] of Object.entries(bookingsByType)) {
+        bookingCounts[offerType] = bookings.length;
+        totalBookings += bookings.length;
+    }
+
+    return {
+        bookingsByType: bookingCounts,
+        totalBookings: totalBookings
+    };
+}
+
+function updateBookingStatistics(statistics) {
+    const bookingsByTypeTable = document.getElementById('bookingsByTypeTable');
+    const bookingsByTypeBody = bookingsByTypeTable.querySelector('tbody');
+    bookingsByTypeBody.innerHTML = '';
+
+    for (const [type, count] of Object.entries(statistics.bookingsByType)) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${type}</td>
+            <td>${count}</td>
+        `;
+        bookingsByTypeBody.appendChild(row);
+    }
+
+    const totalBookings = statistics.totalBookings;
+    const percentageChart = document.getElementById('percentageChart');
+    percentageChart.innerHTML = ''; // Clear previous content
+
+    for (const [type, count] of Object.entries(statistics.bookingsByType)) {
+        const percentage = (count / totalBookings) * 100;
+        const barWidth = Math.max(percentage, 5); // Ensure a minimum width for visibility
+        const bar = document.createElement('div');
+        bar.className = 'progress mb-3';
+        bar.innerHTML = `
+            <div class="progress-bar" role="progressbar" style="width: ${barWidth}%;" 
+                aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100">
+                ${type}: ${percentage.toFixed(2)}%
+            </div>
+        `;
+        percentageChart.appendChild(bar);
+    }
+}
+
+function updateBookingsTable(statistics) {
+    const tableBody = document.querySelector('#bookingsTable tbody');
+    tableBody.innerHTML = ''; // Clear existing rows
+
+    for (const [offerType, count] of Object.entries(statistics.bookingsByType)) {
+        const row = tableBody.insertRow();
+        const typeCell = row.insertCell(0);
+        const countCell = row.insertCell(1);
+
+        typeCell.textContent = offerType;
+        countCell.textContent = count;
+    }
+
+    // Add total row
+    const totalRow = tableBody.insertRow();
+    const totalTypeCell = totalRow.insertCell(0);
+    const totalCountCell = totalRow.insertCell(1);
+
+    totalTypeCell.textContent = 'TOTAL';
+    totalTypeCell.style.fontWeight = 'bold';
+    totalCountCell.textContent = statistics.totalBookings;
+    totalCountCell.style.fontWeight = 'bold';
 }

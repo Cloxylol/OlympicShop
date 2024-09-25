@@ -10,9 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class BookingService {
@@ -45,6 +44,15 @@ public class BookingService {
         return bookingRepository.findByUser(user);
     }
 
+
+    public Map<OfferType, List<Booking>> getAllBookingsByOfferType() {
+        return Arrays.stream(OfferType.values())
+                .collect(Collectors.toMap(
+                        offerType -> offerType,
+                        offerType -> bookingRepository.getBookingsByOfferType(offerType)
+                ));
+    }
+
     public List<Booking> getBookingsByOffer(Long offerId) {
         Offer offer = offerRepository.findById(offerId)
                 .orElseThrow(() -> new RuntimeException("Offer not found"));
@@ -60,6 +68,8 @@ public class BookingService {
         Booking booking = getBookingById(id);
         bookingRepository.delete(booking);
     }
+
+
 
     private String generateBookingCode() {
         return UUID.randomUUID().toString();

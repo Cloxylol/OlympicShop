@@ -9,7 +9,7 @@ function loadUserProfile() {
     if (userInfo) {
         document.getElementById('user-lastname').value = userInfo.lastName || '';
         document.getElementById('user-firstname').value = userInfo.firstName || '';
-        document.getElementById('user-username').value = userInfo.email || '';
+        document.getElementById('user-email').value = userInfo.username || '';
     } else {
         console.error('Aucune information utilisateur trouvée');
         document.getElementById('user-info').innerHTML = '<p>Impossible de charger les informations du profil. Veuillez vous reconnecter.</p>';
