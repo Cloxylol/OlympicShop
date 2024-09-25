@@ -23,14 +23,13 @@ function loadOffers() {
             offers.forEach(offer => {
                 offersList.innerHTML += `
                     <tr>
-                        <td>${offer.id}</td>
                         <td>${offer.name}</td>
                         <td>${offer.price}</td>
                         <td>${offer.capacity}</td>
                         <td>${offer.offerType}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary edit-offer" data-id="${offer.id}">Modifier</button>
-                            <button class="btn btn-sm btn-danger delete-offer" data-id="${offer.id}">Supprimer</button>
+                            <button class="btn btn-sm btn-light btn-purple edit-offer" data-id="${offer.id}">Modifier</button>
+                            <button class="btn btn-sm btn-light btn-pink delete-offer" data-id="${offer.id}">Supprimer</button>
                         </td>
                     </tr>
                 `;
@@ -176,38 +175,6 @@ function processBookingStatistics(bookingsByType) {
     };
 }
 
-function updateBookingStatistics(statistics) {
-    const bookingsByTypeTable = document.getElementById('bookingsByTypeTable');
-    const bookingsByTypeBody = bookingsByTypeTable.querySelector('tbody');
-    bookingsByTypeBody.innerHTML = '';
-
-    for (const [type, count] of Object.entries(statistics.bookingsByType)) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td>${type}</td>
-            <td>${count}</td>
-        `;
-        bookingsByTypeBody.appendChild(row);
-    }
-
-    const totalBookings = statistics.totalBookings;
-    const percentageChart = document.getElementById('percentageChart');
-    percentageChart.innerHTML = ''; // Clear previous content
-
-    for (const [type, count] of Object.entries(statistics.bookingsByType)) {
-        const percentage = (count / totalBookings) * 100;
-        const barWidth = Math.max(percentage, 5); // Ensure a minimum width for visibility
-        const bar = document.createElement('div');
-        bar.className = 'progress mb-3';
-        bar.innerHTML = `
-            <div class="progress-bar" role="progressbar" style="width: ${barWidth}%;" 
-                aria-valuenow="${percentage}" aria-valuemin="0" aria-valuemax="100">
-                ${type}: ${percentage.toFixed(2)}%
-            </div>
-        `;
-        percentageChart.appendChild(bar);
-    }
-}
 
 function updateBookingsTable(statistics) {
     const tableBody = document.querySelector('#bookingsTable tbody');
@@ -231,4 +198,71 @@ function updateBookingsTable(statistics) {
     totalTypeCell.style.fontWeight = 'bold';
     totalCountCell.textContent = statistics.totalBookings;
     totalCountCell.style.fontWeight = 'bold';
+}
+
+function updateBookingStatistics(statistics) {
+    const bookingsByTypeTable = document.getElementById('bookingsByTypeTable');
+    if (!bookingsByTypeTable) {
+        console.error("L'élément 'bookingsByTypeTable' n'a pas été trouvé dans le DOM");
+        return;
+    }
+
+    const bookingsByTypeBody = bookingsByTypeTable.querySelector('tbody');
+    if (!bookingsByTypeBody) {
+        console.error("L'élément 'tbody' n'a pas été trouvé dans 'bookingsByTypeTable'");
+        return;
+    }
+
+    bookingsByTypeBody.innerHTML = '';
+
+    const labels = [];
+    const data = [];
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']; // Ajoutez plus de couleurs si nécessaire
+
+    let i = 0;
+    for (const [type, count] of Object.entries(statistics.bookingsByType)) {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${type}</td>
+            <td>${count}</td>
+        `;
+        bookingsByTypeBody.appendChild(row);
+
+        labels.push(type);
+        data.push(count);
+    }
+
+    const chartCanvas = document.getElementById('bookingsChart');
+    if (!chartCanvas) {
+        console.error("L'élément 'bookingsChart' n'a pas été trouvé dans le DOM");
+        return;
+    }
+    if (window.bookingsChart instanceof Chart) {
+        window.bookingsChart.destroy();
+    }
+
+    window.bookingsChart = new Chart(chartCanvas, {
+        type: 'pie',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors.slice(0, data.length),
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                title: {
+                    display: true,
+                    text: 'Répartition des billets vendus par type d\'offre'
+                }
+                
+            }
+        }
+    });
 }

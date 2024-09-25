@@ -135,6 +135,7 @@ function clearCart() {
         if (!response.ok) {
             throw new Error('Erreur lors de la suppression du panier');
         }
+        window.location.reload();
         console.log('Panier vidé avec succès');
     })
     .catch(error => {
