@@ -60,7 +60,8 @@ async function handleLogin(event) {
 
 async function handleRegister(event) {
     event .preventDefault();
-    const name = document.getElementById('register-name').value;
+    const firstName = document.getElementById('register-firstname').value;
+    const lastName = document.getElementById('register-lastname').value;
     const email = document.getElementById('register-email').value;
     const password = document.getElementById('register-password').value;
     const confirmPassword = document.getElementById('register-confirm-password').value;
@@ -71,9 +72,6 @@ async function handleRegister(event) {
         showAlert("Les mots de passe ne correspondent pas.", 'danger');
         return;
     }
-
-    const [firstName, ...lastNameParts] = name.split(' ');
-    const lastName = lastNameParts.join(' ');
 
     fetch(`${API_URL}/register`, {
         method: 'POST',

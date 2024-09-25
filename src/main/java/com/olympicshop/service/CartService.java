@@ -1,6 +1,5 @@
 package com.olympicshop.service;
 
-import com.olympicshop.dto.UserDTO;
 import com.olympicshop.model.Cart;
 import com.olympicshop.model.CartItem;
 import com.olympicshop.model.Offer;
