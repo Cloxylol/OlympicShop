@@ -51,7 +51,7 @@ public class BookingService {
         return bookingRepository.findByUser(user);
     }
 
-
+    @Transactional(readOnly = true)
     public Map<OfferType, List<Booking>> getAllBookingsByOfferType() {
         return Arrays.stream(OfferType.values())
                 .collect(Collectors.toMap(
