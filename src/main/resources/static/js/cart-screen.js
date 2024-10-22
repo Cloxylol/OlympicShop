@@ -60,25 +60,39 @@ function openPaymentModal() {
     modal.show();
 }
 
+let isProcessing = false;
+
 function processMockPayment() {
+    console.log('processMockPayment appelé, isProcessing:', isProcessing);
+    
+    if (isProcessing) {
+        console.log('Déjà en cours de traitement, sortie');
+        return;
+    }
+    
+    isProcessing = true;
     const paymentButton = document.getElementById('confirmPayment');
     paymentButton.disabled = true;
     paymentButton.innerHTML = 'Traitement en cours...';
 
-    setTimeout(() => {
-        // Simuler un paiement réussi
-        createBooking()
-            .then(bookings => {
-                const bookingIds = bookings.map(b => b.id).join(',');
-                clearCart();
-                window.location.href = `confirmation.html?bookings=${bookingIds}`;
-            })
-            .catch(error => {
-                console.error('Erreur lors de la création de la réservation:', error);
-                alert('Le paiement a réussi, mais une erreur est survenue lors de la création de la réservation. Veuillez contacter le support.');
-            });
-    }, 2000);
+    console.log('Début de createBooking');
+    createBooking()
+        .then(bookings => {
+            console.log('Bookings créées:', bookings);
+            return clearCartAndRedirect(bookings);
+        })
+        .catch(error => {
+            console.error('Erreur détaillée:', error);
+            paymentButton.disabled = false;
+            paymentButton.innerHTML = 'Confirmer le paiement';
+            alert('Une erreur est survenue. Veuillez réessayer.');
+        })
+        .finally(() => {
+            console.log('Fin du processus, reset isProcessing');
+            isProcessing = false;
+        });
 }
+
 
 function createBooking() {
     const userInfo = getUserInfo();
@@ -90,41 +104,30 @@ function createBooking() {
         return Promise.reject(new Error('Token d\'authentification non trouvé'));
     }
 
-    return getCart()
-        .then(cart => {
-            const bookingData = {
-                userId: userInfo.id,
-                items: cart.items.map(item => ({
-                    offerId: item.offer.id,
-                    quantity: item.quantity
-                }))
-            };
-
-            return fetch('/api/bookings/create-multiple', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(userInfo.id)
-            });
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur lors de la création de la réservation');
-            }
-            return response.json();
-        });
+    return fetch('/api/bookings/create-multiple', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(userInfo.id)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Erreur lors de la création de la réservation');
+        }
+        return response.json();
+    });
 }
 
-function clearCart() {
+
+function clearCartAndRedirect(bookings) {
     const userInfo = getUserInfo();
     if (!userInfo) {
-        alert('Erreur lors de la suppression du panier. Veuillez vous reconnecter.');
-        return;
+        throw new Error('Utilisateur non connecté');
     }
 
-    fetch('/api/cart/clear', {
+    return fetch('/api/cart/clear', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -135,11 +138,7 @@ function clearCart() {
         if (!response.ok) {
             throw new Error('Erreur lors de la suppression du panier');
         }
-        window.location.reload();
-        console.log('Panier vidé avec succès');
-    })
-    .catch(error => {
-        console.error('Erreur:', error);
-        alert('Erreur lors de la suppression du panier. Veuillez réessayer.');
+        const bookingIds = bookings.map(b => b.id).join(',');
+        window.location.href = `confirmation.html?bookings=${bookingIds}`;
     });
 }

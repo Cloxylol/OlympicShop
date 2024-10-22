@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,6 +29,10 @@ public class BookingService {
     @Autowired
     private CartRepository cartRepository;
 
+    @Autowired
+    private QRCodeService qrCodeService;
+
+    @Transactional(readOnly = true)
     public Booking getBookingById(Long id) {
         return bookingRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Booking not found with id: " + id));
@@ -38,6 +43,8 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found with code: " + bookingCode));
     }
 
+
+    @Transactional(readOnly = true)
     public List<Booking> getBookingsByUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -69,12 +76,6 @@ public class BookingService {
         bookingRepository.delete(booking);
     }
 
-
-
-    private String generateBookingCode() {
-        return UUID.randomUUID().toString();
-    }
-
     @Transactional
     public List<Booking> createMultipleBookings(String username) {
 
@@ -90,15 +91,25 @@ public class BookingService {
                 booking.setUser(user);
                 booking.setTicketOffer(item.getOffer());
                 booking.setBookingDate(LocalDateTime.now());
-                booking.setBookingCode(generateBookingCode());
+                booking.setBookingCode(generateTicketSecurityKey());
                 booking.setNumberOfTickets(item.getQuantity());
 
-                // TODO: Générer le QR code ici
+                byte[] qrCode = qrCodeService.generateQRCode(
+                        booking.getBookingCode(),
+                        user.getSecurityKey()
+                );
+                booking.setQrCode(qrCode);
 
                 bookings.add(bookingRepository.save(booking));
             }
 
         return bookings;
+    }
+
+    private String generateTicketSecurityKey() {
+        byte[] randomBytes = new byte[32];
+        new SecureRandom().nextBytes(randomBytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 
 }

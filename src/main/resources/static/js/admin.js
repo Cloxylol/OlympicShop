@@ -217,7 +217,7 @@ function updateBookingStatistics(statistics) {
 
     const labels = [];
     const data = [];
-    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']; // Ajoutez plus de couleurs si nécessaire
+    const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']; 
 
     let i = 0;
     for (const [type, count] of Object.entries(statistics.bookingsByType)) {

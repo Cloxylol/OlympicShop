@@ -15,6 +15,29 @@ body {
     background-attachment: fixed
 }
 
+.booking-card {
+    transition: transform 0.2s;
+    box-shadow: 0 2px 5px rgba(38, 21, 43, 0.1);
+}
+
+.qr-code-card {
+    background-color: #f8f9fa;
+    border: none;
+    padding: 1rem;
+}
+
+.qr-code-card img {
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+    background-color: white;
+    border-radius: 4px;
+}
+
+.confirmation-header i {
+    font-size: 2rem;
+    color: #361987;
+}
+
 header {
     background-color: #303d4b;
     color: white;
