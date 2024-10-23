@@ -18,7 +18,20 @@ public class OfferService {
 
     @Transactional
     public Offer createOffer(Offer offer) {
+        controlOffer(offer);
         return offerRepository.save(offer);
+    }
+
+    private void controlOffer(Offer offer) {
+        if(offer==null){
+            throw new IllegalArgumentException("Offer is null");
+        }
+        if(offer.getPrice() < 0) {
+            throw new IllegalArgumentException("Price cannot be negative");
+        }
+        if(offer.getCapacity() <= 0) {
+            throw new IllegalArgumentException("Capacity must be greater than zero");
+        }
     }
 
     public Offer getOfferById(Long id) {
@@ -42,8 +55,10 @@ public class OfferService {
 
     @Transactional
     public void deleteOffer(Long id) {
-        Offer offer = getOfferById(id);
-        offerRepository.delete(offer);
+        if (!offerRepository.existsById(id)) {
+            throw new RuntimeException("Offer not found with id: " + id);
+        }
+        offerRepository.deleteById(id);
     }
 
     public List<Offer> getAllOffers() {
@@ -57,4 +72,5 @@ public class OfferService {
     public List<Offer> getOffersSortedByPrice() {
         return offerRepository.findAllByOrderByPriceAsc();
     }
+
 }

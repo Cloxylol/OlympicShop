@@ -54,25 +54,79 @@ function loadUserBookings() {
 
 function displayBookings(bookings) {
     const bookingsContainer = document.getElementById('user-bookings');
+    if (!Array.isArray(bookings)) {
+        console.error('Les réservations ne sont pas un tableau:', bookings);
+        bookingsContainer.innerHTML = '<p>Erreur lors du chargement des réservations.</p>';
+        return;
+    }
+
     if (bookings.length === 0) {
         bookingsContainer.innerHTML = '<p>Vous n\'avez pas encore de réservations.</p>';
         return;
     }
 
-    let bookingsHTML = '<ul class="list-group">';
+    let bookingsHTML = '';
     bookings.forEach(booking => {
+        if (!booking || !booking.ticketOffer) {
+            console.error('Réservation invalide:', booking);
+            return;
+        }
+
         bookingsHTML += `
-            <li class="list-group-item">
-                <h5>${booking.ticketOffer.name}</h5>
-                <p>Date de réservation: ${new Date(booking.bookingDate).toLocaleDateString()}</p>
-                <p>Nombre de billets: ${booking.numberOfTickets}</p>
-                <p>Code de réservation: ${booking.bookingCode}</p>
-            </li>
-        `;
+        <div class="col-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">${booking.ticketOffer.name}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Date:</strong> ${new Date(booking.bookingDate).toLocaleDateString()}</p>
+                            <p><strong>Billets:</strong> ${booking.numberOfTickets}</p>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            ${createQRCodeImage(booking.qrCode)}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
     });
-    bookingsHTML += '</ul>';
+    bookingsHTML += '</div>';
 
     bookingsContainer.innerHTML = bookingsHTML;
+}
+
+function createQRCodeImage(qrCodeData) {
+    if (!qrCodeData) {
+        return '<div class="alert alert-warning">QR Code non disponible</div>';
+    }
+    
+    try {
+        let base64String;
+        if (Array.isArray(qrCodeData)) {
+            base64String = btoa(String.fromCharCode.apply(null, qrCodeData));
+        } else if (typeof qrCodeData === 'string') {
+            base64String = qrCodeData;
+        } else {
+            console.error('Format de QR code non supporté:', qrCodeData);
+            return '<div class="alert alert-warning">Format de QR code non supporté</div>';
+        }
+
+        return `
+            <div class="qr-code-card">
+                <img src="data:image/png;base64,${base64String}" 
+                    alt="QR Code" 
+                    class="img-fluid"
+                    style="max-width: 150px;">
+                <p class="mt-2 text-muted small">Scannez ce QR code à l'entrée</p>
+            </div>
+        `;
+    } catch (error) {
+        console.error('Erreur lors de la création du QR code:', error);
+        return '<div class="alert alert-warning">Erreur lors de la génération du QR code</div>';
+    }
 }
 
 function handleEditProfile() {

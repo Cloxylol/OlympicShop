@@ -27,8 +27,10 @@ public class Booking {
     @Column(name = "number_of_tickets", nullable = false)
     private Integer numberOfTickets;
 
+
     @Lob
     @Column(name = "qr_code")
+    @Basic(fetch = FetchType.EAGER)
     private byte[] qrCode;
 
     public Booking() {
