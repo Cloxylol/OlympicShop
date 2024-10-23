@@ -1,4 +1,5 @@
 const API_URL = '/api/users';
+const SESSION_URL = '/api/session';
 
 const loginForm = document.getElementById('login-form');
 const registerForm = document.getElementById('register-form');
@@ -6,9 +7,7 @@ const logoutButton = document.getElementById('logout-button');
 const loginTab = document.getElementById('login-tab');
 const registerTab = document.getElementById('register-tab');
 
-export function initAuth() {
-
-
+export async function initAuth() {
     if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
     }
@@ -19,43 +18,38 @@ export function initAuth() {
         logoutButton.addEventListener('click', handleLogout);
     }
 
-    updateAuthUI();
+    setupTabs();
+    await updateAuthUI();
 }
-
 
 async function handleLogin(event) {
     event.preventDefault();
     const email = document.getElementById('login-email').value;
     const password = document.getElementById('login-password').value;
 
-    fetch(`${API_URL}/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username: email, password: password }),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Échec de la connexion');
-            }
-
-            return response.json();
-
-        })
-        .then(data => {
-
-            showAlert('Connexion réussie!', 'success');
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            updateAuthUI();
-            showAlert('Connexion réussie!', 'success');
-            window.location.href = 'index.html'; // Redirection vers la page d'accueil
-
-        })
-        .catch(error => {
-            showAlert(error.message, 'danger');
+    try {
+        const response = await fetch(`${API_URL}/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: email, password: password }),
         });
+
+        if (!response.ok) {
+            throw new Error('Échec de la connexion');
+        }
+
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
+        
+        showAlert('Connexion réussie!', 'success');
+        await updateAuthUI();
+        window.location.href = 'index.html';
+    } catch (error) {
+        showAlert(error.message, 'danger');
+    }
 }
 
 function isValidPassword(password) {
@@ -147,7 +141,6 @@ function togglePasswordVisibility(button) {
     }
 }
 
-
 function showAlert(message, type) {
     console.log("Tentative d'affichage d'alerte:", message, type); // Log de débogage
     let alertContainer = document.getElementById('alert-container');
@@ -174,11 +167,49 @@ function showAlert(message, type) {
     }, 5000);
 }
 
+async function updateAuthUI() {
+    const authSection = document.getElementById('auth-section');
+    const userSection = document.getElementById('user-section');
+    const adminPanel = document.getElementById('admin-panel');
 
-function updateAuthUI() {
+    const isAuth = await isAuthenticated();
+    
+    if (!isAuth) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+    }
 
+    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+
+    if (isAuth && user) {
+        if (authSection) authSection.style.display = 'none';
+        if (userSection) {
+            userSection.style.display = 'block';
+            userSection.innerHTML = `
+                <span>Bienvenue, ${user.firstName}</span>
+                <a href="profile.html" class="btn btn-primary btn-sm ms-2">Profil</a>
+                <button id="logout-button" class="btn btn-secondary btn-sm ms-2">Déconnexion</button>
+            `;
+
+            const logoutButton = document.getElementById('logout-button');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', handleLogout);
+            }
+        }
+
+        if (adminPanel) {
+            adminPanel.style.display = user.roles?.includes('ROLE_ADMIN') ? 'inline-block' : 'none';
+        }
+    } else {
+        if (authSection) authSection.style.display = 'block';
+        if (userSection) userSection.style.display = 'none';
+        if (adminPanel) adminPanel.style.display = 'none';
+    }
+}
+
+function setupTabs() {
     if (loginTab && registerTab) {
-        loginTab.addEventListener('click', function (e) {
+        loginTab.addEventListener('click', function(e) {
             e.preventDefault();
             loginTab.classList.add('active');
             registerTab.classList.remove('active');
@@ -186,7 +217,7 @@ function updateAuthUI() {
             registerForm.style.display = 'none';
         });
 
-        registerTab.addEventListener('click', function (e) {
+        registerTab.addEventListener('click', function(e) {
             e.preventDefault();
             registerTab.classList.add('active');
             loginTab.classList.remove('active');
@@ -194,40 +225,8 @@ function updateAuthUI() {
             loginForm.style.display = 'none';
         });
     }
-
-    const authSection = document.getElementById('auth-section');
-    const userSection = document.getElementById('user-section');
-    const adminPanel = document.getElementById('admin-panel');
-
-    const user = JSON.parse(localStorage.getItem('user'));
-
-    if (isAuthenticated()) {
-        authSection.style.display = 'none';
-        userSection.style.display = 'block';
-        userSection.innerHTML = `
-                <span>Bienvenue, ${user.firstName}</span>
-                <a href="profile.html" class="btn btn-primary btn-sm ms-2">Profil</a>
-                <button id="logout-button" class="btn btn-secondary btn-sm ms-2">Déconnexion</button>
-            `;
-
-        const logoutButton = document.getElementById('logout-button');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', handleLogout);
-        }
-
-        if (user.roles && user.roles.includes('ROLE_ADMIN')) {
-            adminPanel.style.display = 'inline-block';
-        } else {
-            adminPanel.style.display = 'none';
-        }
-
-    } else {
-        authSection.style.display = 'block';
-        userSection.style.display = 'none';
-    }
-
-
 }
+
 
 function handleLogout() {
     localStorage.removeItem('token');
@@ -244,11 +243,25 @@ toggleButtons.forEach(button => {
     });
 });
 
-export function isAuthenticated() {
-    return localStorage.getItem('token') !== null;
+async function isAuthenticated() {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        return false;
+    }
+
+    try {
+        const response = await fetch(`${SESSION_URL}/validate`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        return response.ok;
+    } catch (error) {
+        console.error('Erreur de vérification d\'authentification:', error);
+        return false;
+    }
 }
 
-document.addEventListener('DOMContentLoaded', function () {
-    initAuth();
-    updateAuthUI();
+document.addEventListener('DOMContentLoaded', function() {
+    initAuth().catch(console.error);
 });

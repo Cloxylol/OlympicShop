@@ -1,6 +1,8 @@
 package com.olympicshop.serviceTest;
 
+import com.olympicshop.security.JwtUtils;
 import com.olympicshop.service.SessionService;
+import com.olympicshop.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,11 +18,15 @@ class SessionServiceTest {
     private HttpServletRequest mockRequest;
 
     private SessionService sessionService;
+    private JwtUtils jwtUtils;
+    private UserService userService;
+
+
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        sessionService = new SessionService(mockRequest);
+        sessionService = new SessionService(mockRequest, jwtUtils, userService);
     }
 
     @Test
