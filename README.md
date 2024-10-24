@@ -1,10 +1,5 @@
 # Site de vente de eBillets pour les Jeux Olympiques
 
-COMPTE ADMINISTRATEUR POUR ACCEDER AU PANEL DE GESTION DES OFFRES : 
-- login : admin@admin.com
-- password : olympic
-
-
 ## Description du Projet
 Ce projet est un système de billetterie numérique développé pour les Jeux Olympiques de 2024 en France. Il vise à remplacer les billets physiques par des e-billets sécurisés afin de prévenir la fraude et d'améliorer l'expérience utilisateur.
 
@@ -52,4 +47,9 @@ Ce projet est un système de billetterie numérique développé pour les Jeux Ol
 
 ## Contributeurs
 Cloé PETETIN 
+
+# COMPTE ADMINISTRATEUR POUR ACCEDER AU PANEL DE GESTION DES OFFRES : 
+- login : admin@admin.com
+- password : olympic
+
 
