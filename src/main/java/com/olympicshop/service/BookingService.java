@@ -43,7 +43,6 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Booking not found with code: " + bookingCode));
     }
 
-
     @Transactional(readOnly = true)
     public List<Booking> getBookingsByUser(String username) {
         User user = userRepository.findByUsername(username)
@@ -78,7 +77,6 @@ public class BookingService {
 
     @Transactional
     public List<Booking> createMultipleBookings(String username) {
-
         List<Booking> bookings = new ArrayList<>();
         User user = userRepository.findByUsername(username)
                     .orElseThrow(() -> new RuntimeException("User not found"));

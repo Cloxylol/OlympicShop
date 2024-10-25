@@ -7,6 +7,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +20,8 @@ import java.util.function.Function;
 
 @Component
 public class JwtUtils {
+
+    private static final Logger log = LoggerFactory.getLogger(JwtUtils.class);
 
     @Value("${olympicshop.app.jwtSecret}")
     private String jwtSecret;
@@ -33,12 +37,32 @@ public class JwtUtils {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        if (token == null || userDetails == null) {
+            return false;
+        }
+
+        try {
+            final String username = extractUsername(token);
+            return (username != null &&
+                    username.equals(userDetails.getUsername()) &&
+                    !isTokenExpired(token));
+        } catch (Exception e) {
+            log.error("Token validation failed: {}", e.getMessage());
+            return false;
+        }
     }
 
     private boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            Date expiration = extractExpiration(token);
+            if (expiration == null) {
+                return true;
+            }
+            return expiration.before(new Date());
+        } catch (Exception e) {
+            log.error("Token expiration check failed: {}", e.getMessage());
+            return true;
+        }
     }
 
     private Date extractExpiration(String token) {
