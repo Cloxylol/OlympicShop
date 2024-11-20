@@ -26,6 +26,7 @@ Ce projet est un système de billetterie numérique développé pour les Jeux Ol
   - `security/` : Configurations de sécurité et utilitaires JWT
 - `src/main/resources/` : Fichiers de configuration et ressources statiques
 - `src/main/resources/static/` : Fichiers frontend (HTML, CSS, JS)
+- `src/test/java/com/olympicshop/` : Tests unitaires
 
 ## Points d'Accès API
 - `/api/users/register` : Inscription des utilisateurs
